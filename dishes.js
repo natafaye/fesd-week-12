@@ -1,5 +1,5 @@
 
-// Render when the page loads in
+// Render when the page loads in using the jquery ready function
 $(function() {
     renderDishList();
 })
