@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css"/>
+    <title>Document</title>
+</head>
+<body>
+    <div class="bg-dark text-white p-3" id="contact-container">
+        <button class="btn btn-secondary"></button>
+    </div>
+    <div id="chat-container"></div>
+    <div class="d-flex p-3">
+        <textarea class="form-control" id="chat-textarea" onkeyup="onTextareaType()"></textarea>
+        <button class="btn btn-success ms-2" id="send-button" onclick="onSend()">Send</button>
+    </div>
+    
+    <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="chat-app.js"></script>
+</body>
+</html>
