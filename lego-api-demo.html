@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css" />
+    <title>Document</title>
+</head>
+<body>
+    <div class="bg-light p-4 m-4">
+        <label for="set-id-input" class="form-label">Set ID:</label>
+        <input type="text" id="set-id-input" class="form-control form-control-lg"/>
+        <button class="btn btn-success mt-3" onClick="showSet()">Show Set</button>
+    </div>
+    <div id="set-info-container" class="mt-5 mx-4"></div>
+    
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
+    <script src="API_KEY.js"></script>
+    <script src="lego-api-demo.js"></script>
+</body>
+</html>
