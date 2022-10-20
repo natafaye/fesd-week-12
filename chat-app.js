@@ -1,13 +1,6 @@
 
-const chatContainer = document.getElementById("chat-container");
-const chatTextarea = document.getElementById("chat-textarea");
-const sendButton = document.getElementById("send-button");
-const contactContainer = document.getElementById("contact-container");
-
-
-/**** Data ****/
-
-const contactList = [
+/*** TEST DATA ***/
+const userList = [
     {
         id: 0,
         name: "Mom"
@@ -18,57 +11,50 @@ const contactList = [
     }
 ]
 
-const chatList = [
-    {
-        id: 5,
-        author: "Natalie",
-        to: "Mom",
-        text: "How are you?"
-    },
-    {
-        id: 7,
-        author: "Mom",
-        to: "Natalie",
-        text: "Great!"
-    },
-    {
-        id: 9,
-        author: "Sister",
-        to: "Natalie",
-        text: "Are you here?"
-    },
-    {
-        id: 10,
-        author: "Natalie",
-        to: "Sister",
-        text: "Not yet"
-    }
-]
+let chatList = []
 
-let currentContact = contactList[0];
+const loggedInUser = "Natalie";
 
-let editChatId = null;
+let chatEditId = null;
 
+// const arrayOfDivs = [
+//     <div class="border p-3 m-3">
+//         <p>Natalie - How are you?</p>
+//         <button class="btn btn-primary">Edit</button>
+//         <button class="btn btn-danger ms-2">X</button>
+//     </div>,
+//     <div class="border p-3 m-3">
+//         <p>Mom - Great!</p>
+//         <button class="btn btn-primary">Edit</button>
+//         <button class="btn btn-danger ms-2">X</button>
+//     </div>
+// ]
 
-/**** Chat List Rendering ****/
+/*** RENDERING ***/
 
-window.addEventListener("load", () => {
+window.addEventListener("load", async () => {
     renderChatList();
-    renderContactList();
+
+    // GET DATA FROM THE API
+    const response = await fetch("https://63508d463e9fa1244e48885a.mockapi.io/chats")
+    const data = await response.json()
+    // Save it in the chatList variable
+    chatList = data;
+    // render again
+    renderChatList();
 })
+
+const chatContainer = document.getElementById("chat-container");
+const chatTextarea = document.getElementById("chat-textarea");
 
 function renderChatList() {
     // empty out the chat container
-    while(chatContainer.firstChild) {
+    while (chatContainer.firstChild) {
         chatContainer.removeChild(chatContainer.firstChild)
     }
 
-    // FANCY ADD IN: filter to show only the chats for the current contact
-    const currentContactChats = chatList.filter(chat => chat.author === currentContact.name || chat.to === currentContact.name)
-
-    // fill it with one div for each chat object in the chat list array
-    const arrayOfDivs = currentContactChats.map(chatData => renderChat(chatData))
-    arrayOfDivs.forEach(div => chatContainer.appendChild(div))
+    const arrayOfDivs = chatList.map(chat => renderChat(chat))
+    arrayOfDivs.forEach(div => chatContainer.append(div))
 }
 
 function renderChat(chatData) {
@@ -87,92 +73,85 @@ function renderChat(chatData) {
     editButton.textContent = "Edit"
     editButton.addEventListener("click", () => onStartEdit(chatData.id))
     div.appendChild(editButton);
-    
+
     const deleteButton = document.createElement("button");
     deleteButton.classList.add("btn");
     deleteButton.classList.add("btn-danger");
     deleteButton.classList.add("ms-2");
     deleteButton.textContent = "X"
-    deleteButton.addEventListener("click", () => onDelete(chatData.id) )
+    deleteButton.addEventListener("click", () => onDelete(chatData.id))
     div.appendChild(deleteButton);
 
     return div;
 }
 
+/*** DATA UPDATING ***/
 
-/**** Contact List Rendering ******/
+function onStartEdit(idToEdit) {
+    chatEditId = idToEdit;
 
-function renderContactList() {
-    // empty out the chat container
-    while(contactContainer.firstChild) {
-        contactContainer.removeChild(contactContainer.firstChild)
-    }
-    // fill it with one div for each chat object in the chat list array
-    const arrayOfButtons = contactList.map(contact => renderContact(contact))
-    arrayOfButtons.forEach(button => contactContainer.appendChild(button))
+    const chatToEdit = chatList.find(chat => chat.id === idToEdit)
+
+    chatTextarea.value = chatToEdit.text;
 }
 
-function renderContact(contact) {
-    const button = document.createElement("button");
-    button.textContent = contact.name;
-    button.classList.add("btn")
-    button.classList.add("btn-secondary")
-    button.addEventListener("click", () => switchCurrentContact(contact))
-    return button;
+function onDelete(idToDelete) {
+    // Update the data on the front end
+    const indexToDelete = chatList.findIndex(chat => chat.id === idToDelete)
+    chatList.splice(indexToDelete, 1)
+
+    // TELL THE API
+    fetch("https://63508d463e9fa1244e48885a.mockapi.io/chats/" + idToDelete, { method: "DELETE" })
+
+    // Rerender based on the data
+    renderChatList();
 }
 
+function onSend() {
+    // Update the data
 
-/**** Event Listeners ****/
-
-const onSend = () => {
-    // TODO: handle saving the editing as well as the creating
-    if(editChatId !== null) {
-        const chat = chatList.find(chat => chat.id === editChatId);
-        chat.text = chatTextarea.value
-        // clean up since we're finished editing
-        editChatId = null;
-        sendButton.textContent = "Send"
-    }
-    else {
-        // make a new chat object and push it into our list of chats
-        chatList.push({
+    // conditional to check if we should update or make a new one
+    if (chatEditId === null) {
+        // Make a new chat
+        const newChat = {
             id: chatList[chatList.length - 1].id + 1, // little hack
-            text: chatTextarea.value,
-            to: currentContact.name,
-            author: "Natalie"
+            author: loggedInUser,
+            to: "Sister",
+            text: chatTextarea.value
+        }
+        chatList.push(newChat)
+
+        // TELL THE API
+        fetch("https://63508d463e9fa1244e48885a.mockapi.io/chats", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(newChat)
         })
     }
-    
-    // rerender our chat list
-    renderChatList();
-    // clear out the textarea
-    chatTextarea.value = ""
-}
+    else {
+        // Update the one we're editing
+        const chatToUpdate = chatList.find(chat => chat.id === chatEditId)
+        chatToUpdate.text = chatTextarea.value
 
-const onTextareaType = () => {
-    if(event.keyCode === 13) {
-        onSend()
+        // TELL THE API
+        fetch("https://63508d463e9fa1244e48885a.mockapi.io/chats/" + chatEditId, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(chatToUpdate)
+        })
+
+        // Say we're done editing
+        chatEditId = null;
     }
-}
 
-const onStartEdit = (idToEdit) => {
-    const chat = chatList.find(chat => chat.id === idToEdit);
-    // get the form ready for the user to edit the data in
-    chatTextarea.value = chat.text;
-    // For fun, change the text of the button
-    sendButton.textContent = "Update"
-    // Say which chat we're editing
-    editChatId = idToEdit;
-}
+    chatTextarea.value = "";
 
-const onDelete = (idToDelete) => {
-    const indexToDelete = chatList.findIndex(chat => chat.id === idToDelete);
-    chatList.splice(indexToDelete, 1);
+    // Rerender based on the data
     renderChatList();
 }
 
-const switchCurrentContact = (contact) => {
-    // Switch the current contact
-    currentContact = contact;
-    renderChatList();
+function onKeypress() {
+    if (event.keyCode === 13) {
+        onSend();
+    }
 }
