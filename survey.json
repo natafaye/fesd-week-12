@@ -1,0 +1,97 @@
+{
+  "surveys": [
+    {
+      "id": "1",
+      "title": "What's your favorite color",
+      "options": [
+        "Red",
+        "Green"
+      ]
+    },
+    {
+      "id": "2",
+      "title": "What animal is better?",
+      "options": [
+        "Dog",
+        "Cat"
+      ]
+    }
+  ],
+  "responses": [
+    {
+      "id": "1",
+      "surveyId": "2",
+      "response": 0
+    },
+    {
+      "id": "2",
+      "surveyId": "1",
+      "response": 1
+    },
+    {
+      "id": "f6fe",
+      "surveyId": 2,
+      "response": 1
+    },
+    {
+      "id": "9dbe",
+      "surveyId": 2,
+      "response": 0
+    },
+    {
+      "id": "0cbd",
+      "surveyId": 2,
+      "response": 1
+    },
+    {
+      "id": "6b7f",
+      "surveyId": 2,
+      "response": 0
+    },
+    {
+      "id": "3865",
+      "surveyId": 2,
+      "response": 1
+    },
+    {
+      "id": "f54b",
+      "surveyId": 2,
+      "response": 0
+    },
+    {
+      "id": "a3f5",
+      "surveyId": 2,
+      "response": 1
+    },
+    {
+      "id": "40c0",
+      "surveyId": 1,
+      "response": 0
+    },
+    {
+      "id": "8801",
+      "surveyId": 1,
+      "response": 1
+    },
+    {
+      "id": "35bc",
+      "surveyId": 2,
+      "response": 0
+    },
+    {
+      "id": "8ad0",
+      "surveyId": 2,
+      "response": 1
+    },
+    {
+      "id": "cdf2",
+      "surveyId": 1,
+      "response": 0
+    },
+    {
+      "id": "d22b",
+      "surveyId": 1,
+      "response": 1
+    }
+  ]
+}

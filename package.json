@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "bootstrap": "^5.1.1",
-    "jquery": "^3.6.0"
+    "jquery": "^3.6.0",
+    "json-server": "^1.0.0-alpha.23"
   }
 }
